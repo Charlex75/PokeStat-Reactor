@@ -9,3 +9,12 @@ export const STATS = [
 ];
 
 export const IMAGEN_POR_DEFECTO = "/pokeball.png";
+
+export const NOMBRES_STATS = {
+  hp: "PS",
+  attack: "Ataque",
+  defense: "Defensa",
+  "special-attack": "Ataque especial",
+  "special-defense": "Defensa especial",
+  speed: "Velocidad",
+};
