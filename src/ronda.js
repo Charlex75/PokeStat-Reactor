@@ -1,5 +1,10 @@
+
 import { obtenerPokemon } from "./api.js";
 import { idAleatorio, statAleatoria, hayEmpate } from "./game.js";
+
+export function esperar(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export async function resolverEmpate(izquierdo, derecho, stat) {
   const MAX_INTENTOS = 10;
@@ -28,6 +33,16 @@ export async function crearRonda() {
   ]);
 
   const stat = statAleatoria();
+  const derecho = await resolverEmpate(izquierdo, derechoInicial, stat);
+
+  return { izquierdo, derecho, stat };
+}
+
+export async function siguienteRonda(anterior) {
+  const izquierdo = anterior.derecho;
+  const derechoInicial = await obtenerPokemon(idAleatorio());
+  const stat = statAleatoria();
+
   const derecho = await resolverEmpate(izquierdo, derechoInicial, stat);
 
   return { izquierdo, derecho, stat };
