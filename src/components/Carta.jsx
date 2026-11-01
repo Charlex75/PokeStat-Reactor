@@ -1,4 +1,6 @@
 
+import { useState } from "react";
+import { IMAGEN_POR_DEFECTO } from "../constantes.js";
 import { formatearNombre } from "../game.js";
 import ValorAnimado from "./ValorAnimado.jsx";
 
@@ -9,6 +11,8 @@ export default function Carta({
   resultado,
   animar = false,
 }) {
+  const [imagenRota, setImagenRota] = useState(false);
+
   const nombre = formatearNombre(pokemon.nombre);
   const valor = pokemon.stats[stat];
 
@@ -24,7 +28,11 @@ export default function Carta({
 
   return (
     <div className={`carta ${resultado ?? ""}`}>
-      <img src={pokemon.imagen} alt={nombre} />
+      <img
+        src={imagenRota ? IMAGEN_POR_DEFECTO : pokemon.imagen}
+        alt={nombre}
+        onError={() => setImagenRota(true)}
+      />
       <h2 className="nombre">{nombre}</h2>
       <p className="valor">{contenido}</p>
     </div>

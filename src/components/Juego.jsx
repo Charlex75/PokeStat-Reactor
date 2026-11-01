@@ -16,7 +16,7 @@ const RESULTADO_POR_FASE = {
   fin: "fallo",
 };
 
-export default function Juego({ onReiniciar }) {
+export default function Juego({ onReiniciar, record, onRacha }) {
   const [fase, setFase] = useState("cargando");
   const [ronda, setRonda] = useState(null);
   const [error, setError] = useState(null);
@@ -78,6 +78,7 @@ export default function Juego({ onReiniciar }) {
     }
 
     setFase("revelando");
+    onRacha(racha + 1);
 
     try {
       const [nueva] = await Promise.all([
@@ -115,9 +116,10 @@ export default function Juego({ onReiniciar }) {
   return (
     <>
       <Pregunta stat={stat} />
-
+      
       <div className="arena">
         <Carta
+          key={izquierdo.id}
           pokemon={izquierdo}
           stat={stat}
           mostrarValor
@@ -125,6 +127,7 @@ export default function Juego({ onReiniciar }) {
         />
 
         <Carta
+          key={derecho.id}
           pokemon={derecho}
           stat={stat}
           mostrarValor={mostrarValor}
@@ -132,13 +135,13 @@ export default function Juego({ onReiniciar }) {
           animar
         />
       </div>
-
+      
       <Controles
         onResponder={manejarRespuesta}
         bloqueado={bloqueado}
       />
 
-      <Marcador racha={racha} record={0} />
+      <Marcador racha={racha} record={record} />
 
       {fase === "fin" && (
         <FinPartida
