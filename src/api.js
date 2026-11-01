@@ -1,4 +1,3 @@
-// Peticiones a PokéAPI: sin DOM.
 import { STATS, IMAGEN_POR_DEFECTO } from "./constantes.js";
 import { leer, guardar } from "./almacen.js";
 
@@ -37,10 +36,20 @@ export async function obtenerPokemon(id) {
     return cache;
   }
 
-  const response = await fetch(`${URL_BASE}/pokemon/${id}`);
+  let response;
+
+  try {
+    response = await fetch(`${URL_BASE}/pokemon/${id}`);
+  } catch {
+    throw new Error(
+      "No se pudo capturar el Pokémon. Comprueba tu conexión e inténtalo de nuevo."
+    );
+  }
 
   if (!response.ok) {
-    throw new Error(`No se pudo capturar este pokemon: ${response.status}`);
+    throw new Error(
+      `No se pudo capturar este Pokémon: ${response.status}`
+    );
   }
 
   const datos = await response.json();
