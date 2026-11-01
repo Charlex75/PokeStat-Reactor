@@ -9,6 +9,7 @@ import Controles from "./Controles.jsx";
 import Marcador from "./Marcador.jsx";
 import MensajeEstado from "./MensajeEstado.jsx";
 import FinPartida from "./FinPartida.jsx";
+import Historial from "./Historial.jsx";
 
 const RESULTADO_POR_FASE = {
   revelando: "acierto",
@@ -19,7 +20,9 @@ export default function Juego({ onReiniciar }) {
   const [fase, setFase] = useState("cargando");
   const [ronda, setRonda] = useState(null);
   const [error, setError] = useState(null);
-  const [racha, setRacha] = useState(0);
+  const [historial, setHistorial] = useState([]);
+
+  const racha = historial.filter(entrada => entrada.acierto).length;
 
   useEffect(() => {
     let ignorar = false;
@@ -57,13 +60,24 @@ export default function Juego({ onReiniciar }) {
       eleccion
     );
 
+    const entrada = {
+      numero: historial.length + 1,
+      izquierdo: izquierdo.nombre,
+      derecho: derecho.nombre,
+      stat,
+      valorIzquierdo: izquierdo.stats[stat],
+      valorDerecho: derecho.stats[stat],
+      acierto,
+    };
+
+    setHistorial(h => [...h, entrada]);
+
     if (!acierto) {
       setFase("fin");
       return;
     }
 
     setFase("revelando");
-    setRacha(r => r + 1);
 
     try {
       const [nueva] = await Promise.all([
@@ -106,7 +120,7 @@ export default function Juego({ onReiniciar }) {
         <Carta
           pokemon={izquierdo}
           stat={stat}
-          mostrarValor={true}
+          mostrarValor
           resultado={null}
         />
 
@@ -115,6 +129,7 @@ export default function Juego({ onReiniciar }) {
           stat={stat}
           mostrarValor={mostrarValor}
           resultado={resultado}
+          animar
         />
       </div>
 
@@ -130,6 +145,10 @@ export default function Juego({ onReiniciar }) {
           racha={racha}
           onReiniciar={onReiniciar}
         />
+      )}
+
+      {historial.length > 0 && (
+        <Historial entradas={historial} />
       )}
     </>
   );

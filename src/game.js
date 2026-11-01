@@ -11,6 +11,10 @@ export function statAleatoria() {
   return STATS[indice];
 }
 
+export function formatearNombre(nombre) {
+  return nombre.replaceAll("-", " ");
+}
+
 export function hayEmpate(izquierdo, derecho, stat) {
   return izquierdo.stats[stat] === derecho.stats[stat];
 }
